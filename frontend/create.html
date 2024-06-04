@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Feedback</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        async function createFeedback(event) {
+            event.preventDefault();
+            const userId = document.getElementById('create-userId').value;
+            const comment = document.getElementById('create-comment').value;
+            const rating = document.getElementById('create-rating').value;
+            await fetch('http://localhost:6969/feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId, comment, rating })
+            });
+            window.location.href = 'index.html';
+        }
+    </script>
+</head>
+<body>
+    <h1>Create Feedback</h1>
+    <form id="create-feedback-form" onsubmit="createFeedback(event)">
+        <label for="create-userId">User ID:</label>
+        <input type="text" id="create-userId" name="userId" required>
+        <label for="create-comment">Comment:</label>
+        <input type="text" id="create-comment" name="comment" required>
+        <label for="create-rating">Rating:</label>
+        <input type="number" id="create-rating" name="rating" required min="1" max="5">
+        <button type="submit">Create</button>
+    </form>
+    <a href="index.html">Back to Feedback List</a>
+</body>
+</html>
+

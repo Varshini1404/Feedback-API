@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        h1 {
+            color: #333;
+            margin-top: 20px;
+        }
+    
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+    
+        th {
+            background-color: #f2f2f2;
+        }
+    
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    
+        button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+        }
+    
+        button:hover {
+            background-color: #0056b3;
+        }
+    
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 20px 0;
+            background-color: #28a745;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    
+        a:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        async function fetchFeedbacks() {
+            const response = await fetch('http://localhost:6969/feedback');
+            const feedbacks = await response.json();
+            const feedbackTableBody = document.getElementById('feedback-table-body');
+            feedbackTableBody.innerHTML = '';
+            feedbacks.forEach(feedback => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${feedback.userId}</td>
+                    <td>${feedback.comment}</td>
+                    <td>${feedback.rating}</td>
+                    <td>
+                        <button onclick="editFeedback('${feedback._id}')">Edit</button>
+                        <button onclick="deleteFeedback('${feedback._id}')">Delete</button>
+                    </td>
+                `;
+                feedbackTableBody.appendChild(row);
+            });
+        }
+
+        async function deleteFeedback(id) {
+            await fetch(`http://localhost:6969/feedback/${id}`, {
+                method: 'DELETE'
+            });
+            fetchFeedbacks();
+        }
+
+        function editFeedback(id) {
+            window.location.href = `update.html?id=${id}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchFeedbacks);
+    </script>
+</head>
+<body>
+    <h1>All Feedbacks</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Comment</th>
+                <th>Rating</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="feedback-table-body"></tbody>
+    </table>
+    <a href="create.html">Add Feedback</a>
+</body>
+</html>

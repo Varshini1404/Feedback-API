@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Feedback</title>
+    <script>
+        async function fetchFeedback(id) {
+            const response = await fetch(`http://localhost:6969/feedback/${id}`);
+            const feedback = await response.json();
+            document.getElementById('delete-id').value = feedback._id;
+            document.getElementById('feedback-info').textContent = `User: ${feedback.userId}, Comment: ${feedback.comment}, Rating: ${feedback.rating}`;
+        }
+
+        async function deleteFeedback(event) {
+            event.preventDefault();
+            const id = document.getElementById('delete-id').value;
+            await fetch(`http://localhost:6969/feedback/${id}`, {
+                method: 'DELETE',
+            });
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            fetchFeedback(id);
+        });
+    </script>
+</head>
+<body>
+    <h1>Delete Feedback</h1>
+    <div id="feedback-info"></div>
+    <form id="delete-feedback-form" onsubmit="deleteFeedback(event)">
+        <input type="hidden" id="delete-id" name="id" required>
+        <button type="submit">Delete</button>
+    </form>
+    <a href="index.html">Back to Feedback List</a>
+</body>
+</html>
